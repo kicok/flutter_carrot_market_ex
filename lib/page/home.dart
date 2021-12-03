@@ -12,7 +12,17 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('아라동'),
+        title: InkWell(
+          onTap: () {
+            print('click');
+          },
+          child: Row(
+            children: const [
+              Text('아라동'),
+              Icon(Icons.arrow_drop_down),
+            ],
+          ),
+        ),
       ),
     );
   }
