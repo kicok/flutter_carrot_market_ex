@@ -309,6 +309,7 @@ class _HomeState extends State<Home> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       selectedItemColor: Colors.black, // 선택된 아이템의 컬러
+      selectedFontSize: 12,
       onTap: (int index) {
         setState(() {
           _currentPageIndex = index;
@@ -328,7 +329,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _appBarWidget(),
+      //    appBar: _appBarWidget(),
       body: _bodyWidget(),
       bottomNavigationBar: _bottomNavigationBarWidget(),
     );
