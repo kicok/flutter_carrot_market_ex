@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'page/home.dart';
+import 'package:flutter_carror_market_ex/page/app.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,7 +22,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const Home(),
+      home: const App(),
     );
   }
 }
