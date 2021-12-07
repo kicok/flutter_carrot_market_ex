@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_carror_market_ex/page/detail.dart';
 import 'package:flutter_carror_market_ex/repository/contents_repository.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -103,59 +104,70 @@ class _HomeState extends State<Home> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           itemCount: datas.length,
           itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(
-                      datas[index]['image'].toString(),
-                      width: 100,
-                      height: 100,
-                    ),
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            _stringChange(datas[index]['title']),
-                            overflow: TextOverflow.ellipsis, // ... 표기
-                            style: const TextStyle(fontSize: 15),
-                          ),
-                          Text(
-                            _stringChange(datas[index]['location']),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black.withOpacity(0.3),
-                            ),
-                          ),
-                          Text(
-                            calcStringToWon(
-                                _stringChange(datas[index]['price'])),
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              SvgPicture.asset(
-                                "assets/svg/heart_off.svg",
-                                width: 13,
-                                height: 13,
-                              ),
-                              const SizedBox(width: 5),
-                              Text(_stringChange(datas[index]['likes'])),
-                            ],
-                          ),
-                        ],
+            return GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return DetailContentView(data: datas[index]);
+                }));
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Row(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Hero(
+                        tag: datas[index]['cid'].toString(),
+                        child: Image.asset(
+                          datas[index]['image'].toString(),
+                          width: 100,
+                          height: 100,
+                        ),
                       ),
                     ),
-                  )
-                ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              _stringChange(datas[index]['title']),
+                              overflow: TextOverflow.ellipsis, // ... 표기
+                              style: const TextStyle(fontSize: 15),
+                            ),
+                            Text(
+                              _stringChange(datas[index]['location']),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black.withOpacity(0.3),
+                              ),
+                            ),
+                            Text(
+                              calcStringToWon(
+                                  _stringChange(datas[index]['price'])),
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w500),
+                            ),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                SvgPicture.asset(
+                                  "assets/svg/heart_off.svg",
+                                  width: 13,
+                                  height: 13,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(_stringChange(datas[index]['likes'])),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           },
