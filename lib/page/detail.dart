@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 
 class DetailContentView extends StatefulWidget {
@@ -12,32 +13,100 @@ class DetailContentView extends StatefulWidget {
 
 class _DetailContentViewState extends State<DetailContentView> {
   late Size size;
+  late List<Map<String, String>> imgList;
+  int _current = 0;
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     size = MediaQuery.of(context).size;
+    imgList = [
+      {'id': '0', 'img': widget.data['image'].toString()},
+      {'id': '1', 'img': widget.data['image'].toString()},
+      {'id': '2', 'img': widget.data['image'].toString()},
+      {'id': '3', 'img': widget.data['image'].toString()},
+      {'id': '4', 'img': widget.data['image'].toString()},
+    ];
   }
 
   PreferredSizeWidget _appBarWidget() {
     return AppBar(
       backgroundColor: Colors.transparent,
+      leading: IconButton(
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+        icon: const Icon(Icons.arrow_back, color: Colors.white),
+      ),
       elevation: 0,
       actions: [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+        IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.share, color: Colors.white)),
+        IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.more_vert, color: Colors.white)),
       ],
     );
   }
 
   Widget _bodyWidget() {
-    return Hero(
-      tag: widget.data['cid'].toString(),
-      child: Image.asset(
-        widget.data['image'].toString(),
-        width: size.width,
-        height: size.height / 2,
-        fit: BoxFit.fill,
-      ),
+    return Stack(
+      //alignment: Alignment.center, // 중앙정렬
+      children: [
+        Hero(
+          tag: widget.data['cid'].toString(),
+          child: CarouselSlider(
+              items: imgList.map((map) {
+                return Image.asset(
+                  map['img'].toString(),
+                  width: size.width,
+                  // height: size.height / 2,
+                  fit: BoxFit.fill,
+                );
+              }).toList(),
+              options: CarouselOptions(
+                height: size.width,
+                initialPage: 0,
+                enableInfiniteScroll: false, // 무한 스크롤 여부
+                viewportFraction:
+                    1, // 각 carousel 페이지가 차지하는 화면 영역 비율, 기본은 0.8(80%)를 차지함
+                onPageChanged: (index, reason) {
+                  setState(() {
+                    _current = index;
+                  });
+                },
+              )),
+        ),
+        // Caraousel 점 이동
+        Positioned(
+          bottom: 0,
+          left: 0,
+          right: 0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: imgList.map((map) {
+              return Container(
+                width: 10.0,
+                height: 10.0,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 5.0),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _current == int.parse(map['id'].toString())
+                        ? Colors.white
+                        : Colors.white.withOpacity(0.4)),
+              );
+            }).toList(),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _bottomNavigationBar() {
+    return Container(
+      height: 55,
+      color: Colors.red,
     );
   }
 
@@ -47,6 +116,7 @@ class _DetailContentViewState extends State<DetailContentView> {
       extendBodyBehindAppBar: true, // body를 AppBar 영역 뒤까지 확장한다는 의미
       appBar: _appBarWidget(),
       body: _bodyWidget(),
+      bottomNavigationBar: _bottomNavigationBar(),
     );
   }
 }
