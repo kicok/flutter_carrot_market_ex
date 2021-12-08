@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_carror_market_ex/page/components/manor_temperature_widget.dart';
 
 class DetailContentView extends StatefulWidget {
   final Map<String, String> data;
@@ -49,7 +50,7 @@ class _DetailContentViewState extends State<DetailContentView> {
     );
   }
 
-  Widget _bodyWidget() {
+  Widget _makeSliderImage() {
     return Stack(
       //alignment: Alignment.center, // 중앙정렬
       children: [
@@ -99,6 +100,56 @@ class _DetailContentViewState extends State<DetailContentView> {
             }).toList(),
           ),
         )
+      ],
+    );
+  }
+
+  Widget _sellerSimpleInfo() {
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(children: [
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(50),
+            //   child: Container(
+            //     height: 50,
+            //     width: 50,
+            //     child: Image.asset('assets/images/user.png'),
+            //   ),
+            // ),
+            CircleAvatar(
+              radius: 25,
+              backgroundImage: Image.asset('assets/images/user.png').image,
+              //child: Image.asset('assets/images/user.png'),
+            ),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '쳇님이',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Text(widget.data['location'].toString()),
+              ],
+            ),
+          ]),
+          ManorTemperature(manorTemp: 36.5),
+        ],
+      ),
+    );
+  }
+
+  Widget _bodyWidget() {
+    return Column(
+      children: [
+        _makeSliderImage(),
+        _sellerSimpleInfo(),
       ],
     );
   }
