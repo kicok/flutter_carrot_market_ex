@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carror_market_ex/page/components/manor_temperature_widget.dart';
+import 'package:flutter_carror_market_ex/utils/data_utils.dart';
+import 'package:flutter_svg/svg.dart';
 
 class DetailContentView extends StatefulWidget {
   final Map<String, String> data;
@@ -279,8 +281,70 @@ class _DetailContentViewState extends State<DetailContentView> {
 
   Widget _bottomNavigationBar() {
     return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 15),
       height: 55,
-      color: Colors.red,
+      child: Row(
+        children: [
+          GestureDetector(
+            onTap: () {
+              print('관심상품 이벤트');
+            },
+            child: SvgPicture.asset(
+              'assets/svg/heart_off.svg',
+              width: 25,
+              height: 25,
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.only(left: 15, right: 10),
+            width: 1,
+            height: 40,
+            color: Colors.grey.withOpacity(0.2),
+          ),
+          Column(
+            children: [
+              Text(
+                DataUtils.calcStringToWon(
+                    DataUtils.stringChange(widget.data['price'])),
+                style:
+                    const TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+              ),
+              const Text(
+                '가격제안불가',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+            ],
+          ),
+          // 남아있는 전체 영역을 사용한다.
+          Expanded(
+            child: Row(
+              // Expanded로 남아있는 전체 영역을 사용하게 했지만
+              // Row를 사용하면 실제 가로 영역만큼만 사용할수 있음
+              // 그러면 MainAxisAlignment.end를 사용할수 있다
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: const Color(0xfff08f4f),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+                  margin: const EdgeInsets.only(bottom: 12),
+                  child: const Text(
+                    '채팅으로 거래하기',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 

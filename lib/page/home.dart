@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_carror_market_ex/page/detail.dart';
 import 'package:flutter_carror_market_ex/repository/contents_repository.dart';
+import 'package:flutter_carror_market_ex/utils/data_utils.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
@@ -66,17 +67,6 @@ class _HomeState extends State<Home> {
     );
   }
 
-  String _stringChange(dynamic str) {
-    if (str == null) return "";
-    return str.toString();
-  }
-
-  String calcStringToWon(String priceString) {
-    final oCcy = NumberFormat();
-    if (priceString == '무료나눔') return priceString;
-    return oCcy.format(int.parse(priceString)) + "원";
-  }
-
   _loadContents(currentLocation) {
     return contentsRepository.loadContentsFromLocation(currentLocation);
   }
@@ -132,20 +122,20 @@ class _HomeState extends State<Home> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _stringChange(datas[index]['title']),
+                              DataUtils.stringChange(datas[index]['title']),
                               overflow: TextOverflow.ellipsis, // ... 표기
                               style: const TextStyle(fontSize: 15),
                             ),
                             Text(
-                              _stringChange(datas[index]['location']),
+                              DataUtils.stringChange(datas[index]['location']),
                               style: TextStyle(
                                 fontSize: 12,
                                 color: Colors.black.withOpacity(0.3),
                               ),
                             ),
                             Text(
-                              calcStringToWon(
-                                  _stringChange(datas[index]['price'])),
+                              DataUtils.calcStringToWon(DataUtils.stringChange(
+                                  datas[index]['price'])),
                               style:
                                   const TextStyle(fontWeight: FontWeight.w500),
                             ),
@@ -159,7 +149,8 @@ class _HomeState extends State<Home> {
                                   height: 13,
                                 ),
                                 const SizedBox(width: 5),
-                                Text(_stringChange(datas[index]['likes'])),
+                                Text(DataUtils.stringChange(
+                                    datas[index]['likes'])),
                               ],
                             ),
                           ],
