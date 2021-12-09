@@ -18,6 +18,28 @@ class _DetailContentViewState extends State<DetailContentView> {
   late Size size;
   late List<Map<String, String>> imgList;
   int _current = 0;
+  final ScrollController _controller = ScrollController();
+  double scrollPositionToAlpha = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.addListener(() {
+      setState(() {
+        scrollPositionToAlpha =
+            (_controller.offset > 255) ? 255 : _controller.offset;
+        //_controller.offset이 255가 넘으면 255로 고정하고
+        //255가 아니면 _controller.offset을 scrollPositionToAlpha 으로 한다.
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -33,7 +55,8 @@ class _DetailContentViewState extends State<DetailContentView> {
 
   PreferredSizeWidget _appBarWidget() {
     return AppBar(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Colors.white.withAlpha(
+          scrollPositionToAlpha.toInt()), //스크롤 값에 따라서 alpha값이 0~255까지 변동된다.
       leading: IconButton(
         onPressed: () {
           Navigator.of(context).pop();
@@ -220,6 +243,7 @@ class _DetailContentViewState extends State<DetailContentView> {
     // 왜냐하면 SingleChildScrollView()와 ListView()에 모두 scroll속성이 들어있기 때문이다
     // 그래서 아래와 같은 CustomScrollView 를 사용하고 SliverList()를 사용하는것이다.
     return CustomScrollView(
+      controller: _controller,
       slivers: [
         SliverList(
           delegate: SliverChildListDelegate([
