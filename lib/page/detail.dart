@@ -56,6 +56,7 @@ class _DetailContentViewState extends State<DetailContentView>
   void dispose() {
     super.dispose();
     _controller.dispose();
+    _animationControlle.dispose();
   }
 
   @override
