@@ -14,22 +14,40 @@ class DetailContentView extends StatefulWidget {
   _DetailContentViewState createState() => _DetailContentViewState();
 }
 
-class _DetailContentViewState extends State<DetailContentView> {
+class _DetailContentViewState extends State<DetailContentView>
+    with SingleTickerProviderStateMixin {
+  // with SingleTickerProviderStateMixin 이것을 넣지 않으면 AnimationController(vsync: this) 의 vsync에 this값을 할당하지 못한다.
   late Size size;
   late List<Map<String, String>> imgList;
   int _current = 0;
   final ScrollController _controller = ScrollController();
   double scrollPositionToAlpha = 0;
 
+  late AnimationController _animationControlle;
+
+  late Animation _colorTween;
+
   @override
   void initState() {
     super.initState();
+
+    _animationControlle = AnimationController(vsync: this);
+    // with SingleTickerProviderStateMixin 이것을 넣지 않으면 AnimationController(vsync: this) 의 vsync에 this값을 할당하지 못한다.
+    _colorTween = ColorTween(begin: Colors.white, end: Colors.black)
+        .animate(_animationControlle);
+    //ColorTween 의 데이터를 _animationController 가 관리 하겠다고 선언을 해준것이라고 보면 된다.
+
     _controller.addListener(() {
       setState(() {
         scrollPositionToAlpha =
             (_controller.offset > 255) ? 255 : _controller.offset;
         //_controller.offset이 255가 넘으면 255로 고정하고
         //255가 아니면 _controller.offset을 scrollPositionToAlpha 으로 한다.
+
+        _animationControlle.value = scrollPositionToAlpha / 255;
+        //_animationController.value는 0부터 1까지
+        //_animationController.value 의 값이 0이 되면 _colorTween 의 begin 값인 Colors.white 가 되는 것이고
+        //_animationController.value 의 값이 1이 되면 _colorTween 의 end 값인 Colors.black 이 되게 된다.
       });
     });
   }
@@ -53,6 +71,13 @@ class _DetailContentViewState extends State<DetailContentView> {
     ];
   }
 
+  Widget _makeAnimatedIcon(IconData icon) {
+    return AnimatedBuilder(
+      animation: _colorTween,
+      builder: (context, child) => Icon(icon, color: _colorTween.value),
+    );
+  }
+
   PreferredSizeWidget _appBarWidget() {
     return AppBar(
       backgroundColor: Colors.white.withAlpha(
@@ -61,16 +86,18 @@ class _DetailContentViewState extends State<DetailContentView> {
         onPressed: () {
           Navigator.of(context).pop();
         },
-        icon: const Icon(Icons.arrow_back, color: Colors.white),
+        icon: _makeAnimatedIcon(Icons.arrow_back),
       ),
       elevation: 0,
       actions: [
         IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.share, color: Colors.white)),
+          onPressed: () {},
+          icon: _makeAnimatedIcon(Icons.share),
+        ),
         IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.more_vert, color: Colors.white)),
+          onPressed: () {},
+          icon: _makeAnimatedIcon(Icons.more_vert),
+        ),
       ],
     );
   }
