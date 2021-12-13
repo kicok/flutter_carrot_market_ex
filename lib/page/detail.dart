@@ -27,6 +27,8 @@ class _DetailContentViewState extends State<DetailContentView>
 
   late Animation _colorTween;
 
+  bool isMyFavoriteContent = false;
+
   @override
   void initState() {
     super.initState();
@@ -339,12 +341,29 @@ class _DetailContentViewState extends State<DetailContentView>
         children: [
           GestureDetector(
             onTap: () {
-              print('관심상품 이벤트');
+              setState(() {
+                isMyFavoriteContent = !isMyFavoriteContent;
+              });
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    isMyFavoriteContent ? '즐겨찾기 추가됐습니다.' : '즐겨찾기 해제됐습니다.',
+                  ),
+                  duration: const Duration(seconds: 1),
+                  action: SnackBarAction(
+                    label: 'ACTION',
+                    onPressed: () {},
+                  ),
+                ),
+              );
             },
             child: SvgPicture.asset(
-              'assets/svg/heart_off.svg',
+              isMyFavoriteContent
+                  ? 'assets/svg/heart_on.svg'
+                  : 'assets/svg/heart_off.svg',
               width: 25,
               height: 25,
+              color: const Color(0xfff08f4f),
             ),
           ),
           Container(
