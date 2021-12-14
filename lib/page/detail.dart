@@ -356,7 +356,8 @@ class _DetailContentViewState extends State<DetailContentView>
             onTap: () async {
               if (isMyFavoriteContent) {
                 //제거
-                await contentsRepository.addMyFavoriteContent(widget.data);
+                await contentsRepository
+                    .deleteMyFavoriteContent(widget.data['cid'].toString());
               } else {
                 //추가
                 await contentsRepository.addMyFavoriteContent(widget.data);

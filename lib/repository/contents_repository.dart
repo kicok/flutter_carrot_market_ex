@@ -188,11 +188,21 @@ class ContentsRepository extends LocalStorageRepository {
     }
   }
 
+  Future<void> _updateFavoriteContent(List favoriteContentList) async {
+    await stroreValue(myFavoriteStoreKey, jsonEncode(favoriteContentList));
+  }
+
   addMyFavoriteContent(Map<String, String> content) async {
     List<dynamic> favoriteContentList = await _loadFavoriteContents();
 
     favoriteContentList.add(content);
-    await stroreValue(myFavoriteStoreKey, jsonEncode(favoriteContentList));
+    await _updateFavoriteContent(favoriteContentList);
+  }
+
+  deleteMyFavoriteContent(String cid) async {
+    List<dynamic> favoriteContentList = await _loadFavoriteContents();
+    favoriteContentList.removeWhere((data) => data['cid'] == cid);
+    await _updateFavoriteContent(favoriteContentList);
   }
 
   Future<bool> isMyFavoriteContents(String? cid) async {
