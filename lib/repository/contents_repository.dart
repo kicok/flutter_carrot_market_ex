@@ -178,16 +178,34 @@ class ContentsRepository extends LocalStorageRepository {
   }
 
   final String myFavoriteStoreKey = "myFavoriteStoreKey";
-  addMyFavoriteContent(Map<String, String> content) {
-    stroreValue(myFavoriteStoreKey, jsonEncode(content));
+
+  addMyFavoriteContent(Map<String, String> content) async {
+    String? jsonString = await getStroredValue(myFavoriteStoreKey);
+
+    List<dynamic> favoriteContentList =
+        jsonString == null ? [] : jsonDecode(jsonString);
+    favoriteContentList.add(content);
+    await stroreValue(myFavoriteStoreKey, jsonEncode(favoriteContentList));
   }
 
   Future<bool> isMyFavoriteContents(String? cid) async {
     String? jsonString = await getStroredValue(myFavoriteStoreKey);
+    bool isMyFavoriteContents = false;
+
     if (jsonString != null) {
-      Map<String, dynamic> json = jsonDecode(jsonString);
-      print(json);
-      return cid == json['cid'];
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      print(jsonList);
+      if (jsonList is! List) {
+        return false;
+      } else {
+        for (dynamic data in jsonList) {
+          if (data['cid'] == cid) {
+            isMyFavoriteContents = true;
+            break;
+          }
+        }
+      }
+      return isMyFavoriteContents;
     } else {
       return false;
     }
