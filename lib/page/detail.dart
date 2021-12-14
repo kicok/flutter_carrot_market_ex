@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carror_market_ex/page/components/manor_temperature_widget.dart';
+import 'package:flutter_carror_market_ex/repository/contents_repository.dart';
 import 'package:flutter_carror_market_ex/utils/data_utils.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -17,6 +18,11 @@ class DetailContentView extends StatefulWidget {
 class _DetailContentViewState extends State<DetailContentView>
     with SingleTickerProviderStateMixin {
   // with SingleTickerProviderStateMixin 이것을 넣지 않으면 AnimationController(vsync: this) 의 vsync에 this값을 할당하지 못한다.
+
+  // favorite 가져오기
+  ContentsRepository contentsRepository = ContentsRepository();
+  bool isMyFavoriteContent = false;
+
   late Size size;
   late List<Map<String, String>> imgList;
   int _current = 0;
@@ -26,8 +32,6 @@ class _DetailContentViewState extends State<DetailContentView>
   late AnimationController _animationControlle;
 
   late Animation _colorTween;
-
-  bool isMyFavoriteContent = false;
 
   @override
   void initState() {
@@ -51,6 +55,15 @@ class _DetailContentViewState extends State<DetailContentView>
         //_animationController.value 의 값이 0이 되면 _colorTween 의 begin 값인 Colors.white 가 되는 것이고
         //_animationController.value 의 값이 1이 되면 _colorTween 의 end 값인 Colors.black 이 되게 된다.
       });
+    });
+
+    _loadMyFavoriteContentState();
+  }
+
+  _loadMyFavoriteContentState() async {
+    bool ck = await contentsRepository.isMyFavoriteContents(widget.data['cid']);
+    setState(() {
+      isMyFavoriteContent = ck;
     });
   }
 
@@ -341,6 +354,7 @@ class _DetailContentViewState extends State<DetailContentView>
         children: [
           GestureDetector(
             onTap: () {
+              contentsRepository.addMyFavoriteContent(widget.data);
               setState(() {
                 isMyFavoriteContent = !isMyFavoriteContent;
               });
@@ -349,7 +363,7 @@ class _DetailContentViewState extends State<DetailContentView>
                   content: Text(
                     isMyFavoriteContent ? '즐겨찾기 추가됐습니다.' : '즐겨찾기 해제됐습니다.',
                   ),
-                  duration: const Duration(seconds: 1),
+                  duration: const Duration(milliseconds: 500),
                   action: SnackBarAction(
                     label: 'ACTION',
                     onPressed: () {},
