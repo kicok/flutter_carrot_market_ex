@@ -170,9 +170,7 @@ class ContentsRepository extends LocalStorageRepository {
     ],
   };
 
-// Future<List<Map<String, String>>?>는 Future 내부 값의 null 허용위해 ? 사용
-  Future<List<Map<String, String>>?> loadContentsFromLocation(
-      String location) async {
+  Future<List<dynamic>> loadContentsFromLocation(String location) async {
     await Future.delayed(Duration.zero);
     return data[location];
   }
@@ -209,7 +207,6 @@ class ContentsRepository extends LocalStorageRepository {
     bool isMyFavoriteContents = false;
 
     List<dynamic> jsonList = await loadFavoriteContents();
-    print(jsonList);
     if (jsonList is! List) {
       return false;
     } else {
