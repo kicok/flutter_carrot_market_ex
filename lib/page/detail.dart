@@ -8,7 +8,7 @@ import 'package:flutter_carror_market_ex/utils/data_utils.dart';
 import 'package:flutter_svg/svg.dart';
 
 class DetailContentView extends StatefulWidget {
-  final Map<String, String> data;
+  final Map<String, dynamic> data;
   const DetailContentView({Key? key, required this.data}) : super(key: key);
 
   @override
